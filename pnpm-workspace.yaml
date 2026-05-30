@@ -1,0 +1,11 @@
+allowBuilds:
+  leveldown: true
+
+overrides:
+  '@babel/helpers': ^7.26.10
+  brace-expansion: ^1.1.13
+  cross-spawn: ^7.0.6
+  diff: ^4.0.4
+  js-yaml: ^3.14.2
+  minimatch: ^3.1.5
+  picomatch: ^2.3.2

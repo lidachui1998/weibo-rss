@@ -1,14 +1,14 @@
-import Koa from "koa";
-import Router from "@koa/router";
-import serve from "koa-static";
-import path from "path";
-import config from "./config";
-import { debug, logger } from "./modules/logger";
-import { normalizePort } from "./utils";
-import { registerRoutes } from "./modules/routes";
-import { RSSKoaContext, RSSKoaState } from "./types";
-import { LevelCache } from "./modules/cache";
-import { WeiboData } from "./modules/weibo/weibo";
+import Koa from 'koa';
+import Router from '@koa/router';
+import serve from 'koa-static';
+import path from 'path';
+import config from './config';
+import { logger } from "./modules/logger";
+import { normalizePort } from './utils';
+import { registerRoutes } from './modules/routes';
+import { RSSKoaContext, RSSKoaState } from './types';
+import { LevelCache } from './modules/cache';
+import { WeiboData } from './modules/weibo/weibo';
 
 const koaApp = new Koa<RSSKoaState, RSSKoaContext>();
 const initApp = () => {
@@ -16,10 +16,7 @@ const initApp = () => {
   registerRoutes(router);
 
   // levelCache
-  const cache = LevelCache.getInstance(
-    path.join(config.rootDir, "data"),
-    logger
-  );
+  const cache = LevelCache.getInstance(path.join(config.rootDir, 'data'), logger);
   cache.startScheduleCleanJob();
 
   // weibo
@@ -36,18 +33,14 @@ const initApp = () => {
       logger.debug(`${ctx.req.method} ${ctx.originalUrl} ${ctx.ip}`);
       await next();
       const duration = Date.now() - startTime;
-      logger.info(
-        `[${ctx.status}] ${ctx.req.method} ${ctx.originalUrl} ${ctx.ip} hit: ${
-          ctx.state.hit || 0
-        } ${duration}ms`
-      );
+      logger.info(`[${ctx.status}] ${ctx.req.method} ${ctx.originalUrl} ${ctx.ip} hit: ${ctx.state.hit || 0} ${duration}ms`);
     })
     .use(async (ctx, next) => {
       ctx.cache = cache;
       ctx.weibo = weiboData;
       await next();
     })
-    .use(serve(config.rootDir + "/public"))
+    .use(serve(config.rootDir + '/public'))
     .use(router.routes());
 };
 
