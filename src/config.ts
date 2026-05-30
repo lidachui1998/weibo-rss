@@ -26,7 +26,7 @@ const defaultConfig = {
   cacheTTL: {
     rssXml: 15 * 60,
     apiStatusList: 15 * 60,
-    apiIndexInfo: 3 * 24 * 60 * 60,
+    apiIndexInfo: 1 * 24 * 60 * 60,
     apiLongText: 7 * 24 * 60 * 60,
     apiDetail: 7 * 24 * 60 * 60,
     apiDomain: 7 * 24 * 60 * 60,

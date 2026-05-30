@@ -22,13 +22,27 @@ export const createIndexAPI = () => {
 
   return {
     getIndexUserInfo: (uid: string) => runner.runFunc<WeiboUserData>(async (disable) => {
+      const resHeaders = await axiosInstance({
+        "method": "POST",
+        "url": "https://visitor.passport.weibo.cn/visitor/genvisitor2",
+        "headers": {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "User-Agent": MOCK_UA,
+        },
+        "data": {
+          "cb": "visitor_gray_callback",
+          tid: '',
+          from: 'weibo'
+        }
+      }).then(res => res.headers)
+      axiosInstance.defaults.headers.common['Cookie'] = resHeaders['set-cookie'].filter(cookie => cookie.startsWith('SUB')).map(cookie => cookie.split(';')[0]).join(';');
       logger.debug(`[getInfo] ${uid}`);
       await waitMs(Math.floor(Math.random() * 100));
       return await axiosInstance({
         method: 'get',
         url: `https://m.weibo.cn/api/container/getIndex?type=uid&value=${uid}`,
         headers: {
-          'MWeibo-Pwa': 1,
+          'Mweibo-Pwa': 1,
           'Referer': `https://m.weibo.cn/u/${uid}`,
           'User-Agent': MOCK_UA,
           'X-Requested-With': 'XMLHttpRequest'
@@ -53,7 +67,7 @@ export const createIndexAPI = () => {
         method: 'get',
         url: `https://m.weibo.cn/api/container/getIndex?type=uid&value=${uid}&containerid=${containerId}`,
         headers: {
-          'MWeibo-Pwa': 1,
+          'Mweibo-Pwa': 1,
           'Referer': `https://m.weibo.cn/u/${uid}`,
           'User-Agent': MOCK_UA,
           'X-Requested-With': 'XMLHttpRequest'
